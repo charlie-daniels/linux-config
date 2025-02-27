@@ -1,3 +1,5 @@
+# This can be added to .bashrc directly after downloading the marktext app image.
+
 # to handle marktext file opening or creation
 marktext() {
 	if [ -z "$1" ]; then
