@@ -3,11 +3,15 @@
 LOGFILE="$HOME/.todo"
 
 helpFunction() {
-	echo "Usage: todo <option> <item>"
-	echo -e "\t-l list all todo items"
-	echo -e "\t-r remove specified item"
-	echo -e "\t-a add specified item"
-	echo -e "\t-h show this help menu"
+	echo "Usage: todo [OPTION] [INDEX]"
+	echo "Add tasks to a list of todos while in the CLI."
+	echo ""
+	echo -e "Option\t\t Definition"
+	echo -e "-l\t\t Show list of all tasks and corresponding indices"
+	echo -e "-i <index>\t Show task at specified index"
+	echo -e "-r <index>\t Remove item at specified index"
+	echo -e "-a\t\t Add new task"
+	echo -e "-h\t\t Show this help menu"
 }
 
 checkLog() {
@@ -23,8 +27,8 @@ getList() {
 		return 0;
 	fi
 	# seperate number and task id
-	while IFS='=' read -r id task; do
-		echo "$id - $task"
+	while IFS='=' read -r index task; do
+		echo "$index - $task"
 	done < "$LOGFILE"
 }
 
