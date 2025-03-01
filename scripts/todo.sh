@@ -26,13 +26,19 @@ getList() {
 		echo "No entries found."
 		return 0;
 	fi
-	# seperate number and task id
+	# seperate number and task index
 	while IFS='=' read -r index task; do
 		echo "$index - $task"
 	done < "$LOGFILE"
 }
 
-OPTSTRING=":lrah"
+addTask() {
+	# create task index and assign
+	local count=$(wc -l "$LOGFILE" | cut -d' ' -f1)
+	echo "$count=$1" >> $LOGFILE
+}
+
+OPTSTRING="lr:a:h"
 
 checkLog
 
@@ -43,11 +49,13 @@ while getopts ${OPTSTRING} opt; do
 		r)
 			echo "remove triggered";;
 		a)
-			echo "add triggered";;
+			addTask "${OPTARG}";;
 		h)
 			helpFunction;;
+		#:)
+		#	echo "Warning: -${OPTARG} requires an argument."
 		?)
-			echo "Warning: invalid option -${OPTARG}"
+			echo "Warning: invalid option -${OPTARG}."
 			helpFunction
 			exit 1;;
 	esac
