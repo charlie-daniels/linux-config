@@ -35,7 +35,13 @@ getList() {
 }
 
 removeTask() {
-	sed -i "${1}d" "$LOGFILE"
+	local LINE_COUNT=$(wc -l $LOGFILE | cut -d' ' -f1)
+	if [ ! "$1" -lt 1 ] && [ ! "$1" -gt "$LINE_COUNT" ] ; then
+		sed -i "${1}d" "$LOGFILE"
+	else
+		echo "Warning: task does not exist."
+		exit 1
+	fi
 }
 
 addTask() {
