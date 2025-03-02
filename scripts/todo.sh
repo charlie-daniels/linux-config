@@ -7,7 +7,7 @@ helpFunction() {
 	echo "Add tasks to a list of todos while in the CLI."
 	echo ""
 	echo -e "Option\t\t Definition"
-	echo -e "-l\t\t Show list of all tasks and corresponding indices"
+	echo -e "-l\t\t Show list of all tasks"
 	echo -e "-i <index>\t Show task at specified index"
 	echo -e "-r <index>\t Remove item at specified index"
 	echo -e "-a\t\t Add new task"
@@ -26,9 +26,11 @@ getList() {
 		echo "No entries found."
 		return 0;
 	fi
-	# seperate number and task index
-	while IFS='=' read -r index task; do
-		echo "$index - $task"
+	# read tasks line by line
+	index=1
+	while IFS= read -r line; do
+		echo "$index - $line"
+		((index++))
 	done < "$LOGFILE"
 }
 
@@ -37,9 +39,7 @@ removeTask() {
 }
 
 addTask() {
-	# create task index and assign
-	local count=$(wc -l "$LOGFILE" | cut -d' ' -f1)
-	echo "$count=$1" >> $LOGFILE
+	echo "$1" >> $LOGFILE
 }
 
 OPTSTRING=":lr:a:h"
