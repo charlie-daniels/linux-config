@@ -32,6 +32,10 @@ getList() {
 	done < "$LOGFILE"
 }
 
+removeTask() {
+	sed -i "${1}d" "$LOGFILE"
+}
+
 addTask() {
 	# create task index and assign
 	local count=$(wc -l "$LOGFILE" | cut -d' ' -f1)
@@ -50,7 +54,7 @@ while getopts ${OPTSTRING} opt; do
 		l)
 			getList;;
 		r)
-			echo "remove triggered";;
+			removeTask "${OPTARG}";;
 		a)
 			addTask "${OPTARG}";;
 		h)
