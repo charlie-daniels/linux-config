@@ -3,7 +3,7 @@
 LOGFILE="$HOME/.todo"
 
 helpFunction() {
-	echo "Usage: todo [OPTION] [INDEX]"
+	echo "Usage: todo [OPTION] [ARGUMENT] | todo [ARGUMENT]"
 	echo "Add tasks to a list of todos while in the CLI."
 	echo ""
 	echo -e "Option\t\t Definition"
@@ -42,7 +42,10 @@ OPTSTRING=":lr:a:h"
 
 checkLog
 
+opt_selected=false
+
 while getopts ${OPTSTRING} opt; do
+	opt_selected=true
 	case ${opt} in
 		l)
 			getList;;
@@ -62,3 +65,13 @@ while getopts ${OPTSTRING} opt; do
 			exit 1;;
 	esac
 done
+
+if ! $opt_selected ; then
+	if [[ -n $1 ]] ; then
+		addTask "$1"
+	else
+		echo "Warning: no option or argument given."
+		helpFunction
+		exit 1
+	fi
+fi
