@@ -8,9 +8,9 @@ helpFunction() {
 	echo ""
 	echo -e "Option\t\t Definition"
 	echo -e "-l\t\t Show list of all tasks"
-	echo -e "-i <index>\t Show task at specified index"
-	echo -e "-r <index>\t Remove item at specified index"
+	echo -e "-r <index>\t Remove task at index"
 	echo -e "-a\t\t Add new task"
+	echo -e "-b <index>\t Bump task to top"
 	echo -e "-h\t\t Show this help menu"
 }
 
@@ -27,7 +27,7 @@ getList() {
 		return 0;
 	fi
 	# read tasks line by line
-	index=1
+	local index=1
 	while IFS= read -r line; do
 		echo "$index - $line"
 		((index++))
@@ -42,14 +42,20 @@ addTask() {
 	echo "$1" >> $LOGFILE
 }
 
-OPTSTRING=":lr:a:h"
+bumpTask() {
+	local LINE_CONTENT=$(sed -n "${1}p" "$LOGFILE")
+	sed -i "${1}d" "$LOGFILE"
+	sed -i "1i${LINE_CONTENT}" "$LOGFILE"
+}
+
+OPTSTRING=":lr:a:hb:"
 
 checkLog
 
-opt_selected=false
+OPT_SELECTED=false
 
 while getopts ${OPTSTRING} opt; do
-	opt_selected=true
+	OPT_SELECTED=true
 	case ${opt} in
 		l)
 			getList;;
@@ -57,6 +63,8 @@ while getopts ${OPTSTRING} opt; do
 			removeTask "${OPTARG}";;
 		a)
 			addTask "${OPTARG}";;
+		b)
+			bumpTask "${OPTARG}";;
 		h)
 			helpFunction;;
 		:)
@@ -70,7 +78,7 @@ while getopts ${OPTSTRING} opt; do
 	esac
 done
 
-if ! $opt_selected ; then
+if ! $OPT_SELECTED ; then
 	if [[ -n $1 ]] ; then
 		addTask "$1"
 	else
