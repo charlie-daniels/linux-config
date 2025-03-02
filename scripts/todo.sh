@@ -38,7 +38,7 @@ addTask() {
 	echo "$count=$1" >> $LOGFILE
 }
 
-OPTSTRING="lr:a:h"
+OPTSTRING=":lr:a:h"
 
 checkLog
 
@@ -52,8 +52,10 @@ while getopts ${OPTSTRING} opt; do
 			addTask "${OPTARG}";;
 		h)
 			helpFunction;;
-		#:)
-		#	echo "Warning: -${OPTARG} requires an argument."
+		:)
+			echo "Warning: -${OPTARG} requires an argument."
+			helpFunction
+			exit 1;;
 		?)
 			echo "Warning: invalid option -${OPTARG}."
 			helpFunction
