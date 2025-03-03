@@ -1,3 +1,6 @@
+# A CLI utility to organise and track tasks.
+# An alias for todo can be added to ~/.bashrc linking to this script.
+
 #!/bin/bash
 
 LOGFILE="$HOME/.todo"
